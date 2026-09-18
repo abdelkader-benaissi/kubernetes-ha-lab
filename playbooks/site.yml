@@ -1,0 +1,25 @@
+- name: Prepare every Kubernetes node
+  hosts: all
+  become: true
+  roles: [common, containerd, kubernetes]
+
+- name: Configure redundant API endpoint
+  hosts: control_plane
+  become: true
+  roles: [load_balancer]
+
+- name: Bootstrap first control plane
+  hosts: cp-01
+  become: true
+  roles: [bootstrap_control_plane]
+
+- name: Join remaining control planes
+  hosts: control_plane:!cp-01
+  become: true
+  serial: 1
+  roles: [join_control_plane]
+
+- name: Join workers
+  hosts: workers
+  become: true
+  roles: [join_worker]

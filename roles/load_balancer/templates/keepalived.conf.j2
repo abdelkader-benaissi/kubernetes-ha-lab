@@ -1,0 +1,16 @@
+vrrp_script check_haproxy {
+  script "/usr/bin/pgrep haproxy"
+  interval 2
+  fall 2
+  rise 2
+}
+vrrp_instance K8S_API {
+  state {{ 'MASTER' if inventory_hostname == groups['control_plane'][0] else 'BACKUP' }}
+  interface {{ ansible_default_ipv4.interface }}
+  virtual_router_id 51
+  priority {{ 150 - groups['control_plane'].index(inventory_hostname) * 10 }}
+  advert_int 1
+  authentication { auth_type PASS; auth_pass {{ load_balancer_keepalived_auth_pass }}; }
+  virtual_ipaddress { {{ api_vip }}/24; }
+  track_script { check_haproxy; }
+}

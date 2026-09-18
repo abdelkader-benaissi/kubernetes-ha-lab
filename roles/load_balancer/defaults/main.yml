@@ -1,0 +1,1 @@
+load_balancer_keepalived_auth_pass: "{{ lookup('ansible.builtin.env', 'KEEPALIVED_AUTH_PASS') }}"

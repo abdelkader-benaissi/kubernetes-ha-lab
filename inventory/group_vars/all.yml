@@ -1,0 +1,7 @@
+kubernetes_minor: "v1.34"
+kubernetes_package_version: "1.34.1-1.1"
+pod_cidr: "10.244.0.0/16"
+api_frontend_port: 7443
+api_server_port: 6443
+cilium_version: "1.18.2"
+cilium_cli_version: "0.18.7"

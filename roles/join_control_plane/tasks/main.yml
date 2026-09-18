@@ -1,0 +1,4 @@
+- name: Join control plane
+  ansible.builtin.command: "{{ hostvars[groups['control_plane'][0]].bootstrap_control_plane_join_command }}"
+  args: {creates: /etc/kubernetes/admin.conf}
+  no_log: true

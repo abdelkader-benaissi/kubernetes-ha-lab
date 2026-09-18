@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 505" role="img" aria-labelledby="title desc">
+  <title id="title">Kubernetes high availability lab topology</title>
+  <desc id="desc">An operator reaches a Keepalived floating VIP on port 7443. HAProxy forwards to three Kubernetes control-plane API servers on port 6443. Each control plane has a stacked etcd member. Three worker VMs use the control plane.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0b1220"/><stop offset="1" stop-color="#142641"/></linearGradient>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0L8 4 0 8Z" fill="#7dd3fc"/></marker>
+  </defs>
+  <rect width="1200" height="505" rx="24" fill="url(#bg)"/>
+  <text x="48" y="51" fill="#f8fafc" font-family="Arial,sans-serif" font-size="26" font-weight="700">Kubernetes HA Lab</text>
+  <text x="48" y="81" fill="#94a3b8" font-family="Arial,sans-serif" font-size="16">Six libvirt VMs · kubeadm · stacked etcd · API VIP</text>
+  <rect x="48" y="130" width="210" height="101" rx="15" fill="#172a44" stroke="#38bdf8" stroke-width="2"/>
+  <text x="66" y="169" fill="#f8fafc" font-family="Arial,sans-serif" font-size="20" font-weight="700">Operator</text>
+  <text x="66" y="196" fill="#bae6fd" font-family="Arial,sans-serif" font-size="15">kubectl / Ansible</text>
+  <path d="M258 180H330" stroke="#7dd3fc" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="343" y="129" width="302" height="104" rx="15" fill="#172a44" stroke="#38bdf8" stroke-width="2"/>
+  <text x="362" y="163" fill="#f8fafc" font-family="Arial,sans-serif" font-size="20" font-weight="700">Floating API endpoint</text>
+  <text x="362" y="191" fill="#bae6fd" font-family="Arial,sans-serif" font-size="16">10.10.20.10:7443</text>
+  <text x="362" y="213" fill="#94a3b8" font-family="Arial,sans-serif" font-size="13">Keepalived + HAProxy on control planes</text>
+  <path d="M645 181H717" stroke="#7dd3fc" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="730" y="116" width="420" height="130" rx="16" fill="#152c37" stroke="#34d399" stroke-width="2"/>
+  <text x="751" y="152" fill="#a7f3d0" font-family="Arial,sans-serif" font-size="16" font-weight="700">CONTROL PLANE / API :6443</text>
+  <text x="751" y="183" fill="#f8fafc" font-family="Arial,sans-serif" font-size="19">cp-01    cp-02    cp-03</text>
+  <text x="751" y="213" fill="#cbd5e1" font-family="Arial,sans-serif" font-size="15">etcd-01 ↔ etcd-02 ↔ etcd-03</text>
+  <rect x="48" y="285" width="1102" height="135" rx="18" fill="#182d39" stroke="#34d399"/>
+  <text x="70" y="324" fill="#a7f3d0" font-family="Arial,sans-serif" font-size="17" font-weight="700">WORKER NODES / CILIUM</text>
+  <text x="70" y="358" fill="#f8fafc" font-family="Arial,sans-serif" font-size="21">worker-01</text>
+  <text x="432" y="358" fill="#f8fafc" font-family="Arial,sans-serif" font-size="21">worker-02</text>
+  <text x="800" y="358" fill="#f8fafc" font-family="Arial,sans-serif" font-size="21">worker-03</text>
+  <text x="70" y="390" fill="#94a3b8" font-family="Arial,sans-serif" font-size="14">Terraform provisions VM and network resources; Ansible configures the operating system and Kubernetes.</text>
+  <text x="48" y="468" fill="#94a3b8" font-family="Arial,sans-serif" font-size="14">Failure boundary: all six guests share one physical libvirt host. Host failure takes down the lab.</text>
+</svg>

@@ -1,0 +1,23 @@
+name: validate
+on:
+  pull_request:
+  push: {branches: [main]}
+permissions: {contents: read}
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform -chdir=terraform fmt -check -recursive
+      - run: terraform -chdir=terraform init -backend=false
+      - run: terraform -chdir=terraform validate
+  ansible:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pipx install ansible-core
+      - run: pipx install ansible-lint
+      - run: ansible-galaxy collection install -r requirements.yml
+      - run: ansible-playbook -i inventory/hosts.yml playbooks/site.yml --syntax-check
+      - run: ansible-lint playbooks/site.yml roles/

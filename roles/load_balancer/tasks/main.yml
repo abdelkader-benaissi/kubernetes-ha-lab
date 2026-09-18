@@ -1,0 +1,14 @@
+- name: Validate the shared VRRP authentication value
+  ansible.builtin.assert:
+    that:
+      - load_balancer_keepalived_auth_pass | length == 8
+    fail_msg: KEEPALIVED_AUTH_PASS must contain exactly eight characters
+  no_log: true
+- name: Install HA packages
+  ansible.builtin.apt: {name: [haproxy, keepalived], state: present, update_cache: true}
+- name: Configure HAProxy
+  ansible.builtin.template: {src: haproxy.cfg.j2, dest: /etc/haproxy/haproxy.cfg, mode: '0644', validate: 'haproxy -c -f %s'}
+  notify: Restart haproxy
+- name: Configure Keepalived
+  ansible.builtin.template: {src: keepalived.conf.j2, dest: /etc/keepalived/keepalived.conf, mode: '0600'}
+  notify: Restart keepalived

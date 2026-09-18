@@ -1,0 +1,27 @@
+- name: Disable swap now
+  ansible.builtin.command: swapoff -a
+  changed_when: false
+- name: Disable swap persistently
+  ansible.builtin.replace: {path: /etc/fstab, regexp: '^(?!#)(.*\sswap\s.*)$', replace: '# \1'}
+- name: Load kernel modules
+  ansible.builtin.command: "modprobe {{ item }}"
+  changed_when: false
+  loop: [overlay, br_netfilter]
+- name: Persist kernel modules
+  ansible.builtin.copy:
+    dest: /etc/modules-load.d/kubernetes.conf
+    mode: '0644'
+    content: |
+      overlay
+      br_netfilter
+- name: Configure Kubernetes sysctls
+  ansible.posix.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    sysctl_set: true
+  loop:
+    - {name: net.bridge.bridge-nf-call-iptables, value: '1'}
+    - {name: net.bridge.bridge-nf-call-ip6tables, value: '1'}
+    - {name: net.ipv4.ip_forward, value: '1'}
+    - {name: net.ipv4.ip_nonlocal_bind, value: '1'}

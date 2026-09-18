@@ -1,0 +1,17 @@
+global
+  log /dev/log local0
+  user haproxy
+  group haproxy
+defaults
+  mode tcp
+  timeout connect 5s
+  timeout client 50s
+  timeout server 50s
+frontend kubernetes-api
+  bind {{ api_vip }}:{{ api_frontend_port }}
+  default_backend control-planes
+backend control-planes
+  balance roundrobin
+{% for host in groups['control_plane'] %}
+  server {{ host }} {{ hostvars[host].ansible_host }}:{{ api_server_port }} check
+{% endfor %}
